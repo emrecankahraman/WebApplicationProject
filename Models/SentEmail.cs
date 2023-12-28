@@ -7,19 +7,19 @@ public partial class SentEmail
 {
     public int EmailId { get; set; }
 
-    public int? VictimId { get; set; }
+    public int VictimId { get; set; }
 
-    public int? AttackId { get; set; }
+    public int AttackId { get; set; }
 
-    public DateTime? SentDate { get; set; }
+    public DateTime SentDate { get; set; }
 
-    public string? Içerik { get; set; }
+    public string Description { get; set; } = null!;
 
-    public string? Konu { get; set; }
+    public string Title { get; set; } = null!;
 
-    public virtual Attack? Attack { get; set; }
+    public virtual Attack Attack { get; set; } = null!;
 
     public virtual ICollection<ClickedMail> ClickedMails { get; set; } = new List<ClickedMail>();
 
-    public virtual Victim? Victim { get; set; }
+    public virtual Victim Victim { get; set; } = null!;
 }

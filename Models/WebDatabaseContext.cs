@@ -78,6 +78,7 @@ public partial class WebDatabaseContext : DbContext
 
             entity.HasOne(d => d.Email).WithMany(p => p.ClickedMails)
                 .HasForeignKey(d => d.EmailId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__ClickedMa__Email__46E78A0C");
         });
 
@@ -111,19 +112,18 @@ public partial class WebDatabaseContext : DbContext
 
             entity.Property(e => e.EmailId).HasColumnName("EmailID");
             entity.Property(e => e.AttackId).HasColumnName("AttackID");
-            entity.Property(e => e.Içerik).HasColumnName("içerik");
-            entity.Property(e => e.Konu)
-                .HasMaxLength(255)
-                .HasColumnName("konu");
             entity.Property(e => e.SentDate).HasColumnType("datetime");
+            entity.Property(e => e.Title).HasMaxLength(255);
             entity.Property(e => e.VictimId).HasColumnName("VictimID");
 
             entity.HasOne(d => d.Attack).WithMany(p => p.SentEmails)
                 .HasForeignKey(d => d.AttackId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__SentEmail__Attac__440B1D61");
 
             entity.HasOne(d => d.Victim).WithMany(p => p.SentEmails)
                 .HasForeignKey(d => d.VictimId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__SentEmail__Victi__4316F928");
         });
 
