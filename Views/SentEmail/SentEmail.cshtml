@@ -1,0 +1,45 @@
+﻿@model WebApplicationProject.Models.SentEmail
+
+@{
+    ViewData["Title"] = "SentEmail";
+}
+
+<h1>CreateBulk</h1>
+
+<form asp-controller="SentEmail" asp-action="SentEmail" method="post">
+    <div class="form-group">
+        <label for="startId">Start Id:</label>
+        <input type="number" id="startId" name="startId" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="endId">End Id:</label>
+        <input type="number" id="endId" name="endId" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="AttackId"></label>
+        <input asp-for="AttackId" class="form-control" />
+        <span asp-validation-for="AttackId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="SentDate"></label>
+        <input asp-for="SentDate" class="form-control" />
+        <span asp-validation-for="SentDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <input asp-for="Description" class="form-control" />
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Title"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Gönder</button>
+</form>

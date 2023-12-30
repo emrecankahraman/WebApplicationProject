@@ -1,6 +1,34 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+<header>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <!-- Navigasyon çubuğu içeriği -->
+    </nav>
+    <div class="container">
+        <main role="main" class="pb-3">
+            <div class="menu">
+                <a asp-controller="FacebookLogin" asp-action="Index">Go to Facebook Login Page</a>
+            </div>
+            <div class="menu">
+                <a asp-controller="SentEmail" asp-action="Index">Go to Email sender</a>
+            </div>
+            <div class="menu">
+                <a asp-controller="NetflixLogin" asp-action="Index">Netflix</a>
+            </div>
+            <div class="menu">
+                <a asp-controller="SpotifyLogin" asp-action="Index">Spotify</a>
+            </div>
+          
+            <div class="menu">
+                <a asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+            </div>
+            <div class="menu">
+                <a asp-controller="SentEmail" asp-action="Index">Go to Facebook Login Page</a>
+            </div>
+        </main>
+    </div>
+</header>
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>

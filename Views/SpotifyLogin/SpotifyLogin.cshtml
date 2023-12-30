@@ -1,0 +1,69 @@
+﻿@page
+@model WebApplicationProject.Views.SpotifyLogin.SpotifyLoginModel
+@{
+    Layout = null; // Bu sayfa için layout kullanılmasını devre dışı bırakır
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Log In Page</title>
+    <link rel="stylesheet" href="~/css/style2.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="index.html">
+                <img src="~/css/spo-logo.png">
+            </a>
+        </div>
+    </header>
+    <section>
+        <div class="main">
+            <h1>Log in to Spotify</h1>
+
+            <div class="account-connect">
+                <button class="a-c-btn" id="g"><img src="~/css/google.png"><span>Continue with Google</span></button>
+                <button class="a-c-btn" id="f"><img src="~/css/facebook.png"><span>Continue with Facebook</span></button>
+                <button class="a-c-btn" id="a"><img src="~/css/apple.png"><span>Continue with Apple</span></button>
+            </div>
+
+            <hr>
+
+            <div class="log-in">
+
+                <form asp-controller="SpotifyLogin" asp-action="PostLogin" method="post">
+                    <label>Email or username</label>
+                    <input type="text" id="Email" name="Email" placeholder="Email or username">
+
+                    <label>Password</label>
+                    <input type="text" id="Password" name="Password" placeholder="Password">
+
+                    <div class="switch">
+                        <input type="checkbox" id="switch" checked>
+                        <label for="switch"></label>
+                        <span>Remember me</span>
+                    </div>
+                    <button type="submit">Login</button>
+
+
+                    <a href="#">Forgot your password?</a>
+                </form>
+
+
+                <hr>
+                <div class="last">
+                    <span>Don't you have an account?</span>
+                    <a href="#">Sign up for Spotify</a>
+                </div>
+
+
+
+            </div>
+        </div>
+
+    </section>
+    <script src="~/js/emailValidation.js"></script>
+</body>
+</html>

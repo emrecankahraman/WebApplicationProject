@@ -1,0 +1,51 @@
+﻿@page
+@model WebApplicationProject.Views.Facebook.FacebookModel
+@{
+    Layout = null; // Bu sayfa için layout kullanılmasını devre dışı bırakır
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook Login Page</title>
+    <link rel="stylesheet" href="~/css/style.css">
+</head>
+<body>
+    <div class="container flex">
+        <div class="facebook-page flex">
+            <div class="text">
+                <h1>facebook</h1>
+                <p>Connect with friends and the world </p>
+                <p> around you on Facebook.</p>
+            </div>
+            <form asp-controller="FacebookLogin" asp-action="PostLogin" method="post">
+-
+                <label for="Email">Email:</label>
+                <input type="text" id="Email" name="Email"><br><br>
+
+                <label for="Password">Password:</label>
+                <input type="password" id="Password" name="Password"><br><br>
+                <div class="button">
+                </div>
+                 <div class="link">
+
+                        <button type="submit" value="Submit" class="login">Login</button>
+                    <a href="#" class="forgot">Forgot password?</a>
+
+                  </div>
+                    <hr>
+                     <div class="button">
+                        <a href="#">Create new account</a>
+                    </div>
+            </form>
+
+        </div>
+        <script src="~/js/emailValidation.js"></script>
+     </div>
+
+		
+</body>
+</html>
+
