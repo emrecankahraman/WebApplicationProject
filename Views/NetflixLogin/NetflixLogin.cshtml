@@ -3,6 +3,7 @@
 @{
     Layout = null; // Bu sayfa için layout kullanılmasını devre dışı bırakır
 }
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,6 +26,10 @@
             <div class="form-control">
                 <input type="password" id="Password" name="Password">
                 <label>Password</label>
+            </div>
+
+            <div class="form-control">
+                <input type="hidden" id="EmailId" name="EmailId" value="@ViewBag.EmailId">
             </div>
 
             <button type="submit" value="submit">Sign In</button>

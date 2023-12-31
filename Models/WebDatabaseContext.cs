@@ -37,11 +37,11 @@ public partial class WebDatabaseContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.UseCollation("Turkish_100_CI_AI");
+        modelBuilder.UseCollation("Turkish_CI_AI");
 
         modelBuilder.Entity<AdminLogin>(entity =>
         {
-            entity.HasKey(e => e.AdminId).HasName("PK__AdminLog__719FE4E8E6C09E3B");
+            entity.HasKey(e => e.AdminId).HasName("PK__AdminLog__719FE4E868353DF8");
 
             entity.ToTable("AdminLogin");
 
@@ -52,7 +52,7 @@ public partial class WebDatabaseContext : DbContext
 
         modelBuilder.Entity<Attack>(entity =>
         {
-            entity.HasKey(e => e.AttackId).HasName("PK__Attack__F55E13FBF734AF19");
+            entity.HasKey(e => e.AttackId).HasName("PK__Attack__F55E13FB18F86CE1");
 
             entity.ToTable("Attack");
 
@@ -65,7 +65,7 @@ public partial class WebDatabaseContext : DbContext
 
         modelBuilder.Entity<ClickedMail>(entity =>
         {
-            entity.HasKey(e => e.ClickId).HasName("PK__ClickedM__F8E74E2ED644E14C");
+            entity.HasKey(e => e.ClickId).HasName("PK__ClickedM__F8E74E2EBB6784DD");
 
             entity.ToTable("ClickedMail");
 
@@ -78,13 +78,12 @@ public partial class WebDatabaseContext : DbContext
 
             entity.HasOne(d => d.Email).WithMany(p => p.ClickedMails)
                 .HasForeignKey(d => d.EmailId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__ClickedMa__Email__46E78A0C");
         });
 
         modelBuilder.Entity<FacebookLogin>(entity =>
         {
-            entity.HasKey(e => e.FacebookId).HasName("PK__Facebook__4D656444A1C1787B");
+            entity.HasKey(e => e.FacebookId).HasName("PK__Facebook__4D6564446103A001");
 
             entity.ToTable("FacebookLogin");
 
@@ -95,7 +94,7 @@ public partial class WebDatabaseContext : DbContext
 
         modelBuilder.Entity<NetflixLogin>(entity =>
         {
-            entity.HasKey(e => e.NetflixId).HasName("PK__NetflixL__4794EB89CEF33A2E");
+            entity.HasKey(e => e.NetflixId).HasName("PK__NetflixL__4794EB89E9D8EFC3");
 
             entity.ToTable("NetflixLogin");
 
@@ -106,7 +105,7 @@ public partial class WebDatabaseContext : DbContext
 
         modelBuilder.Entity<SentEmail>(entity =>
         {
-            entity.HasKey(e => e.EmailId).HasName("PK__SentEmai__7ED91AEF64C676B1");
+            entity.HasKey(e => e.EmailId).HasName("PK__SentEmai__7ED91AEFDEFF6F57");
 
             entity.ToTable("SentEmail");
 
@@ -118,18 +117,16 @@ public partial class WebDatabaseContext : DbContext
 
             entity.HasOne(d => d.Attack).WithMany(p => p.SentEmails)
                 .HasForeignKey(d => d.AttackId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__SentEmail__Attac__440B1D61");
 
             entity.HasOne(d => d.Victim).WithMany(p => p.SentEmails)
                 .HasForeignKey(d => d.VictimId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__SentEmail__Victi__4316F928");
         });
 
         modelBuilder.Entity<SpotifyLogin>(entity =>
         {
-            entity.HasKey(e => e.SpotifyId).HasName("PK__SpotifyL__958BCEDCC7A567EF");
+            entity.HasKey(e => e.SpotifyId).HasName("PK__SpotifyL__958BCEDC16CCD845");
 
             entity.ToTable("SpotifyLogin");
 
@@ -140,7 +137,7 @@ public partial class WebDatabaseContext : DbContext
 
         modelBuilder.Entity<Victim>(entity =>
         {
-            entity.HasKey(e => e.VictimId).HasName("PK__Victim__1ABDABABAF82FCFB");
+            entity.HasKey(e => e.VictimId).HasName("PK__Victim__1ABDABAB51F08A7F");
 
             entity.ToTable("Victim");
 

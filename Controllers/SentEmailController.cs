@@ -68,21 +68,26 @@ namespace WebApplicationProject.Controllers
                     var newSentEmail = new SentEmail
                     {
                         VictimId = victim.VictimId,
-                        Description = $"Sn. {victim.Name} bir ödül kazandınız. {attack?.Type} den gelen hediyeyi kabul etmek için {attack?.Url} tıklayın",
+                        //Description = $"Sn. {victim.Name} bir ödül kazandınız. {attack?.Type} den gelen hediyeyi kabul etmek için <a href='{attack?.Url}'>buraya tıklayın</a>",
                         SentDate = sentEmail.SentDate,
                         AttackId = sentEmail.AttackId,
                         Title = sentEmail.Title
                     };
 
-                    _context.Add(newSentEmail);
+                    var Email = _context.Add(newSentEmail);
+                    _context.SaveChanges();
+                    var SavedEmail = _context.SentEmails.FirstOrDefault(a => a.EmailId == Email.Entity.EmailId);
+                    SavedEmail.Description = $"Sn. {victim.Name} bir ödül kazandınız. {attack?.Type} den gelen hediyeyi kabul etmek için <a href='{attack?.Url}?EmailId={SavedEmail.EmailId}'>buraya tıklayın</a>";//queryString
+                    _context.Update(SavedEmail);
+                    _context.SaveChanges();
+                    return Redirect($"{attack?.Url}?EmailId={SavedEmail.EmailId}");
+
                 }
+  
 
-                _context.SaveChanges();
-
-                return RedirectToAction("Index");
             }
 
-            return View(); // Gerekirse geri dönecek bir view
+            return View(sentEmail); // Gerekirse geri dönecek bir view
         }
 
     }

@@ -7,11 +7,11 @@ public partial class Victim
 {
     public int VictimId { get; set; }
 
-    public string Name { get; set; } = null!;
+    public string? Name { get; set; }
 
-    public string Surname { get; set; } = null!;
+    public string? Surname { get; set; }
 
-    public string Email { get; set; } = null!;
+    public string? Email { get; set; }
 
     public virtual ICollection<SentEmail> SentEmails { get; set; } = new List<SentEmail>();
 }

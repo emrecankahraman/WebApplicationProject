@@ -2,11 +2,12 @@
 
 @{
     ViewData["Title"] = "SentEmail";
+    
 }
 
-<h1>CreateBulk</h1>
+<h1>SentEmail</h1>
 
-<form asp-controller="SentEmail" asp-action="SentEmail" method="post">
+<form asp-controller="SentEmail" asp-action="SentEmail" method="get">
     <div class="form-group">
         <label for="startId">Start Id:</label>
         <input type="number" id="startId" name="startId" class="form-control" />
@@ -41,5 +42,7 @@
         <span asp-validation-for="Title" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Gönder</button>
+    <button type="submit">Gönder</button>
+    
 </form>
+    
