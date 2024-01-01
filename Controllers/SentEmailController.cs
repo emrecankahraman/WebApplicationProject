@@ -139,7 +139,68 @@ namespace WebApplicationProject.Controllers
                 }
             }
         }
+        public IActionResult GetSentEmailStatistics()
+        {
+            var sentEmailData = _context.SentEmails
+                 .GroupBy(email => email.SentDate)
+                 .Select(group => new
+                 {
+                     Date = group.Key,
+                     EmailCount = group.Count()
+                 })
+            .OrderBy(item => item.Date)
+            .ToList();
 
 
+            var labels = sentEmailData.Select(item => Convert.ToDateTime(item.Date).ToString("dd-MM-yyyy")).ToArray();
+            var data = sentEmailData.Select(item => item.EmailCount).ToArray();
+
+            return Json(new { labels, data });
+        }
+
+        [HttpGet]
+        public JsonResult GetChartData()
+        {
+            var netflixSuccessCount = _context.Attacks
+        .Where(a => a.Type == "Netflix")
+        .SelectMany(a => a.SentEmails)
+        .SelectMany(se => se.ClickedMails)
+            .Count(c => c.Success);
+
+            var facebookSuccessCount = _context.Attacks
+                .Where(a => a.Type == "Facebook")
+                .SelectMany(a => a.SentEmails)
+                .SelectMany(se => se.ClickedMails)
+                .Count(c => c.Success);
+
+            var spotifySuccessCount = _context.Attacks
+                .Where(a => a.Type == "Spotify")
+                .SelectMany(a => a.SentEmails)
+                .SelectMany(se => se.ClickedMails)
+                .Count(c => c.Success);
+
+
+            var clickedMailSuccessCount = _context.ClickedMails
+                .Where(c => c.Success)
+                .Select(c => c.EmailId)
+                .Distinct()
+                .Count();
+
+            var sentEmailCount = _context.SentEmails.Count();
+
+            var data = new
+            {
+                ClickedMailSuccessCount = clickedMailSuccessCount,
+                SentEmailCount = sentEmailCount,
+                NetflixSuccessCount = netflixSuccessCount,
+                FacebookSuccessCount = facebookSuccessCount,
+                SpotifySuccessCount = spotifySuccessCount
+            };
+
+            return Json(data);
+        }
     }
 }
+
+
+ 
