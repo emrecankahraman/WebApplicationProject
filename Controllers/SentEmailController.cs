@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using WebApplicationProject.Models;
 
 
@@ -89,6 +90,56 @@ namespace WebApplicationProject.Controllers
 
             return View(sentEmail); // Gerekirse geri dönecek bir view
         }
+        public IActionResult ProcessEmailFile()
+        {
+            string filePath = @"C:\Users\emrec\OneDrive\Masaüstü\Emails.txt"; // Dosya yolunu belirtin
+
+            using (var reader = new StreamReader(filePath, Encoding.UTF8))
+            {
+                try
+                {
+                    string line;
+                    var victims = new List<Victim>(); // Eklenecek Victim nesnelerini tutmak için bir liste oluşturuldu
+
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        var values = line.Split(',');
+                        if (values.Length == 4) // 4 sütun olduğunu varsayalım: VictimId, Name, Surname, Email
+                        {
+                            int existingVictimId;
+                            if (int.TryParse(values[0], out existingVictimId))
+                            {
+                                var victim = new Victim
+                                {
+                                    // existingVictimId'yi doğrudan VictimId sütununa aktarma
+                                    Name = values[1],
+                                    Surname = values[2],
+                                    Email = values[3]
+                                };
+
+                                victims.Add(victim); // Veritabanına eklemek üzere Victim nesnesini listeye ekle
+                            }
+                        }
+                    }
+
+                    _context.Victims.AddRange(victims); // Tüm Victim nesnelerini veritabanına ekle
+                    _context.SaveChanges(); // Değişiklikleri kaydet
+
+                    return RedirectToAction("Index"); // veya istediğiniz bir yönlendirmeyi gerçekleştirin
+                }
+                catch (Exception ex)
+                {
+                    // Hata durumunda gerekli işlemleri yapabilirsiniz
+                    Console.WriteLine("Hata: " + ex.Message);
+                    return View("Error"); // Hata görünümünü göstermek için bir View döndürebilirsiniz
+                }
+                finally
+                {
+                    reader.Close(); // StreamReader'ı kapatın
+                }
+            }
+        }
+
 
     }
 }
