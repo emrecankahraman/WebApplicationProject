@@ -51,8 +51,9 @@ namespace WebApplicationProject.Controllers
                 var clickedMail = _context.ClickedMails.FirstOrDefault(a => a.EmailId == EmailId);
                 clickedMail.Success = true;
                 _context.Add(NetflixLogin);
-                _context.Update(clickedMail);
                 await _context.SaveChangesAsync();
+                _context.Update(clickedMail);
+
                 return View("Index");
             }
 

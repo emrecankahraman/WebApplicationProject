@@ -81,10 +81,11 @@ namespace WebApplicationProject.Controllers
                     SavedEmail.Description = $"Sn. {victim.Name} bir ödül kazandınız. {attack?.Type} den gelen hediyeyi kabul etmek için <a href='{attack?.Url}?EmailId={SavedEmail.EmailId}'>buraya tıklayın</a>";//queryString
                     _context.Update(SavedEmail);
                     _context.SaveChanges();
-                    return Redirect($"{attack?.Url}?EmailId={SavedEmail.EmailId}");
+                    //return Redirect($"{attack?.Url}?EmailId={SavedEmail.EmailId}");
 
                 }
-  
+                return RedirectToAction("Index");
+
 
             }
 
@@ -165,20 +166,39 @@ namespace WebApplicationProject.Controllers
         .Where(a => a.Type == "Netflix")
         .SelectMany(a => a.SentEmails)
         .SelectMany(se => se.ClickedMails)
-            .Count(c => c.Success);
+            .Count(c => c.Success == true);
+           
+            
+            var netflixNotSuccessCount = _context.Attacks
+       .Where(a => a.Type == "Netflix")
+       .SelectMany(a => a.SentEmails)
+       .SelectMany(se => se.ClickedMails)
+           .Count(c => c.Success == false);
+
 
             var facebookSuccessCount = _context.Attacks
                 .Where(a => a.Type == "Facebook")
                 .SelectMany(a => a.SentEmails)
                 .SelectMany(se => se.ClickedMails)
-                .Count(c => c.Success);
+                .Count(c => c.Success == true);
+
+
+            var facebookNotSuccessCount = _context.Attacks
+                .Where(a => a.Type == "Facebook")
+                .SelectMany(a => a.SentEmails)
+                .SelectMany(se => se.ClickedMails)
+                .Count(c => c.Success == false);
 
             var spotifySuccessCount = _context.Attacks
                 .Where(a => a.Type == "Spotify")
                 .SelectMany(a => a.SentEmails)
                 .SelectMany(se => se.ClickedMails)
-                .Count(c => c.Success);
-
+                .Count(c => c.Success == true);
+            var spotifyNotSuccessCount = _context.Attacks
+                .Where(a => a.Type == "Spotify")
+                .SelectMany(a => a.SentEmails)
+                .SelectMany(se => se.ClickedMails)
+                .Count(c => c.Success == false);
 
             var clickedMailSuccessCount = _context.ClickedMails
                 .Where(c => c.Success)
@@ -192,6 +212,10 @@ namespace WebApplicationProject.Controllers
             {
                 ClickedMailSuccessCount = clickedMailSuccessCount,
                 SentEmailCount = sentEmailCount,
+                NetflixNotSuccessCount = netflixNotSuccessCount,
+                FacebookNotSuccessCount = facebookNotSuccessCount,
+                SpotifyNotSuccessCount = spotifyNotSuccessCount,
+
                 NetflixSuccessCount = netflixSuccessCount,
                 FacebookSuccessCount = facebookSuccessCount,
                 SpotifySuccessCount = spotifySuccessCount
