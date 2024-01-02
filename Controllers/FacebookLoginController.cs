@@ -16,22 +16,29 @@ namespace WebApplicationProject.Controllers
              _context = context;
              _logger = logger;
          }
+         public IActionResult Page()
+         {
+             return View("~/Views/FacebookLogin/FacebookLogin.cshtml");
+         }
          public IActionResult Index(int EmailId)
          {
              ViewBag.EmailId = EmailId;
-         
-         
-             // Veritabanına ekleme işlemi
-             var clicked = new ClickedMail
-             {
-                 EmailId = EmailId, 
-                 Date = DateTime.Now,
-                 Success = false
-             };
-         
-             _context.Add(clicked);
-             _context.SaveChanges();
-             return View("~/Views/FacebookLogin/FacebookLogin.cshtml");
+
+
+            var existingClickedMail = _context.ClickedMails.FirstOrDefault(a => a.EmailId == EmailId);
+            if (existingClickedMail == null) // Eğer böyle bir kayıt yoksa ekleme işlemi yap
+            {
+                var clicked = new ClickedMail
+                {
+                    EmailId = EmailId,
+                    Date = DateTime.Now,
+                    Success = false
+                };
+                _context.Add(clicked);
+                _context.SaveChanges();
+            }
+
+            return View("~/Views/FacebookLogin/FacebookLogin.cshtml");
          }
 
          [HttpPost]
@@ -46,12 +53,12 @@ namespace WebApplicationProject.Controllers
                      Email = Email, 
                      Password = Password 
                  };
-                 var clickedMail = _context.ClickedMails.FirstOrDefault(a => a.EmailId == EmailId);
-                 clickedMail.Success = true;
-                 _context.Add(FacebookLogin);
-                 _context.Update(clickedMail);
-                 await _context.SaveChangesAsync();
-                 return View("Index");
+                 var clickedMail = _context.ClickedMails.FirstOrDefault(a => a.EmailId == EmailId);//Burda EmailId sini alıyorum 
+                 clickedMail.Success = true;//giriş yap butonuna basıp giriş yaptığı için ClickedMail tablosunda False olan değeri Trueya çeviriyorum
+                 _context.Add(FacebookLogin);//sonra bunu FacebookLogin tabloma ekliyorum
+                 await _context.SaveChangesAsync();//bütün herşeyi save ediyorum
+                 _context.Update(clickedMail);//save ettikten sonra değiştiriyorum ki ikinci defa aynı değeri tekrar veritabanına eklemeye çalışmasın 
+                return View("Index");
              }
 
          return BadRequest(); // Hata durumunda bad request dönebilirsiniz

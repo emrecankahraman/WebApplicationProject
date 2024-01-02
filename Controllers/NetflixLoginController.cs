@@ -15,23 +15,31 @@ namespace WebApplicationProject.Controllers
             _context = context;
             _logger = logger;
         }
+        public IActionResult Page()
+        {          
+            return View("~/Views/NetflixLogin/NetflixLogin.cshtml");
+        }
+
+
         public IActionResult Index(int EmailId)
-        {
+        {   
+
             ViewBag.EmailId = EmailId;
-           
-           
-                // Veritabanına ekleme işlemi
+
+            var existingClickedMail = _context.ClickedMails.FirstOrDefault(a => a.EmailId == EmailId);
+            if (existingClickedMail == null) // Eğer böyle bir kayıt yoksa ekleme işlemi yap
+            {
                 var clicked = new ClickedMail
                 {
-                    EmailId = EmailId, // Örnek olarak fname'i Email alanına atadım
-                    Date = DateTime.Now ,// Örnek olarak lname'i Password alanına atadım
+                    EmailId = EmailId,
+                    Date = DateTime.Now,
                     Success = false
                 };
-
                 _context.Add(clicked);
                 _context.SaveChanges();
-                
-            
+            }
+
+            // Veritabanına ekleme işlemi            
             return View("~/Views/NetflixLogin/NetflixLogin.cshtml");
         }
 

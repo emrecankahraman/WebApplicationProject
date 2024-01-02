@@ -14,6 +14,7 @@
     <title>Dashboard - SB Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <link href="~/css/style3.css" rel="stylesheet" />
+    
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 <body class="sb-nav-fixed">
@@ -67,7 +68,18 @@
                                 </a>
                                 <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                     <nav class="sb-sidenav-menu-nested nav">
-                                        <a class="nav-link" href="Emailtemplete.html">E-mail template</a>
+                                        <form id="sentEmailForm">
+                                            <button type="button" id="sentEmailButton">Sent Email</button>
+                                        </form>
+                                        <form id="SpotifyLogin">
+                                            <button type="button" id="NetflixLoginButton">Netflix Login</button>
+                                        </form>
+                                        <form id="SpotifyLoginButton">
+                                            <button type="button" id="SpotifyLoginButton">Spotify Login</button>
+                                        </form>
+                                        <form id="FacebookLogin">
+                                            <button type="button" id="FacebookLoginButton">Facebook Login</button>
+                                        </form>
 
                                     </nav>
                                 </div>
@@ -99,23 +111,13 @@
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item active">Dashboard</li>
                     </ol>
-                    <div class="row">
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card bg-primary text-white mb-4">
-                                <a class="nav-link" href="Emailtemplete.html">
-                                    <div class="card-body">E mail templetes</div>
-
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
+                   
                     <div class="row">
                         <div class="col-xl-6">
                             <div class="card mb-4">
                                 <div class="card-header">
                                     <i class="fas fa-chart-area me-1"></i>
-                                    deneme
+                                    Statictics
                                 </div>
                                 <div class="card-body"><canvas id="myChart" width="100%" height="40"></canvas></div>
                             </div>
@@ -130,7 +132,7 @@
                             </div>
                         </div>
                     </div>
-
+                </div>
             </main>
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
@@ -170,10 +172,10 @@
                     var myChart = new Chart(ctx, {
                         type: 'bar',
                         data: {
-                            labels: ['Login sucses', 'Sent Email', 'Login netflix sucses', 'Login FacebookSucses', ' login SpotifySucses', 'NetflixNotSuccses', 'FacebookNotSucses ','SpotifyNotSucses'],
+                            labels: ['ClickedMail', 'Login success', 'Sent Email', 'Login netflix success', 'Login FacebookSuccess', ' login SpotifySuccess', 'NetflixNotSuccses', 'FacebookNotSuccess', 'SpotifyNotSuccess'],
                             datasets: [{
-                                label: 'Success Counts',
-                                data: [data.clickedMailSuccessCount, data.sentEmailCount, data.netflixSuccessCount, data.facebookSuccessCount, data.spotifySuccessCount, data.netflixNotSuccessCount, data.facebookNotSuccessCount,data.spotifyNotSuccessCount],
+                                label: 'Email Phishing',
+                                data: [data.clickedEmailCount ,data.clickedMailSuccessCount, data.sentEmailCount, data.netflixSuccessCount, data.facebookSuccessCount, data.spotifySuccessCount, data.netflixNotSuccessCount, data.facebookNotSuccessCount,data.spotifyNotSuccessCount],
                                 backgroundColor: [
                                     'rgba(255, 99, 132, 0.2)',
                                     'rgba(54, 162, 235, 0.2)',
@@ -232,6 +234,36 @@
                     }
                 });
             }
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Düğmeye tıklama olayı
+            document.getElementById("sentEmailButton").addEventListener("click", function () {
+                // SentEmail controller'ının Index action'ını çağırmak için window.location kullanabilirsiniz
+                window.location.href = '/SentEmail/Index';
+            });
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            // Düğmeye tıklama olayı
+            document.getElementById("NetflixLoginButton").addEventListener("click", function () {
+                // SentEmail controller'ının Index action'ını çağırmak için window.location kullanabilirsiniz
+                window.location.href = '/NetflixLogin/Page';
+            });
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            // Düğmeye tıklama olayı
+            document.getElementById("SpotifyLoginButton").addEventListener("click", function () {
+                // SentEmail controller'ının Index action'ını çağırmak için window.location kullanabilirsiniz
+                window.location.href = '/SpotifyLogin/Page';
+            });
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            // Düğmeye tıklama olayı
+            document.getElementById("FacebookLoginButton").addEventListener("click", function () {
+                // SentEmail controller'ının Index action'ını çağırmak için window.location kullanabilirsiniz
+                window.location.href = '/FacebookLogin/Page';
+            });
         });
     </script>
 </body>

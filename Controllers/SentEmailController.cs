@@ -1,9 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+﻿using MailKit.Net.Smtp;
+using MailKit.Security;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using MimeKit;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using WebApplicationProject.Models;
-
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace WebApplicationProject.Controllers
 {
@@ -11,6 +20,7 @@ namespace WebApplicationProject.Controllers
     {
         private readonly WebDatabaseContext _context;
         private readonly ILogger<SentEmailController> _logger;
+        
 
         public SentEmailController(WebDatabaseContext context, ILogger<SentEmailController> logger)
         {
@@ -22,39 +32,8 @@ namespace WebApplicationProject.Controllers
         {
             return View("~/Views/SentEmail/SentEmail.cshtml");
         }
+     
 
-
-        /*public IActionResult Create(SentEmail sentEmail)
-        {   
-            if (ModelState.IsValid)
-            {
-                    if (sentEmail.VictimId != null)
-                    {
-                        var victim = _context.Victims.FirstOrDefault(v => v.VictimId == sentEmail.VictimId);
-                        var attack = _context.Attacks.FirstOrDefault(a => a.AttackId == sentEmail.AttackId);
-                        if (victim != null)
-                        {
-                            sentEmail.Içerik = $"Sn. {victim.Name} bir ödül kazandınız.";
-                        }
-                        if (attack != null)
-                        {
-                            sentEmail.Içerik += $" {attack.Type} için {attack.Url}";
-                        }
-                    }   
-                // Model verilerini kullanarak yapılacak işlemler (örneğin, veritabanına ekleme)
-                // Örnek olarak:
-                _context.Add(sentEmail);
-                _context.SaveChanges();
-                
-                return RedirectToAction("Index"); // Başka bir sayfaya yönlendirme
-            }
-
-            
-            return View(sentEmail);
-        }
-        */
-
-       
         public IActionResult SentEmail(int startId, int endId, SentEmail sentEmail)
         {
             if (ModelState.IsValid)
@@ -93,7 +72,7 @@ namespace WebApplicationProject.Controllers
         }
         public IActionResult ProcessEmailFile()
         {
-            string filePath = @"C:\Users\emrec\OneDrive\Masaüstü\Emails.txt"; // Dosya yolunu belirtin
+            string filePath = @"C:\Users\Tarık\Documents\Emails.txt"; // Dosya yolunu belirtin
 
             using (var reader = new StreamReader(filePath, Encoding.UTF8))
             {
@@ -162,6 +141,7 @@ namespace WebApplicationProject.Controllers
         [HttpGet]
         public JsonResult GetChartData()
         {
+            
             var netflixSuccessCount = _context.Attacks
         .Where(a => a.Type == "Netflix")
         .SelectMany(a => a.SentEmails)
@@ -207,9 +187,11 @@ namespace WebApplicationProject.Controllers
                 .Count();
 
             var sentEmailCount = _context.SentEmails.Count();
+            var clickedEmailCount = _context.ClickedMails.Count();
 
             var data = new
             {
+                ClickedEmailCount = clickedEmailCount,
                 ClickedMailSuccessCount = clickedMailSuccessCount,
                 SentEmailCount = sentEmailCount,
                 NetflixNotSuccessCount = netflixNotSuccessCount,

@@ -40,12 +40,14 @@
                     <label>Password</label>
                     <input type="text" id="Password" name="Password" placeholder="Password">
 
+                    <input type="hidden" name="EmailId" value="@ViewBag.EmailId" />
+
                     <div class="switch">
                         <input type="checkbox" id="switch" checked>
                         <label for="switch"></label>
                         <span>Remember me</span>
                     </div>
-                    <button type="submit">Login</button>
+                    <button type="submit" value="submit">Login</button>
 
 
                     <a href="#">Forgot your password?</a>
