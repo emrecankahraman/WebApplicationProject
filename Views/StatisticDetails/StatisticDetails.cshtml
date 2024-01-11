@@ -1,5 +1,5 @@
 ﻿@page
-@model WebApplicationProject.Views.Dashboard.DashboardModel
+@model WebApplicationProject.Views.StatisticDetails.StatisticDetailsModel
 @{
     Layout = null;
 }
@@ -13,8 +13,9 @@
     <meta name="author" content="" />
     <title>Dashboard - SB Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-    <link href="~/css/style3.css" rel="stylesheet"/>
+    <link href="~/css/style3.css" rel="stylesheet" />
 
+    <script src="~/js/StaticDetailsChart.js"></script>
     <script src="~/js/PageDirector.js"></script>
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
@@ -69,17 +70,16 @@
                                 </a>
                                 <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                     <nav class="sb-sidenav-menu-nested nav">
-                                        
                                         <form id="StatisticDetails">
                                             <button type="button" id="StatisticDetailsButton">Statistic Details</button>
                                         </form>
                                         <form id="sentEmailForm">
                                             <button type="button" id="sentEmailButton">Sent Email</button>
                                         </form>
-                                        <form id="SpotifyLogin">
+                                        <form id="NetflixLogin">
                                             <button type="button" id="NetflixLoginButton">Netflix Login</button>
                                         </form>
-                                        <form id="SpotifyLoginButton">
+                                        <form id="SpotifyLogin">
                                             <button type="button" id="SpotifyLoginButton">Spotify Login</button>
                                         </form>
                                         <form id="FacebookLogin">
@@ -116,24 +116,33 @@
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item active">Dashboard</li>
                     </ol>
-                   
+
                     <div class="row">
-                        <div class="col-xl-6">
+                        <div class="col-xl-4">
                             <div class="card mb-4">
                                 <div class="card-header">
                                     <i class="fas fa-chart-area me-1"></i>
-                                    Statictics
+                                    Statistics (Netflix)
                                 </div>
-                                <div class="card-body"><canvas id="myChart" width="100%" height="40"></canvas></div>
+                                <div class="card-body"><canvas id="myChartNetflix" width="100%" height="40"></canvas></div>
                             </div>
                         </div>
-                        <div class="col-xl-6">
+                        <div class="col-xl-4">
                             <div class="card mb-4">
                                 <div class="card-header">
-                                    <i class="fas fa-chart-bar me-1"></i>
-                                    Sent Mails
+                                    <i class="fas fa-chart-area me-1"></i>
+                                    Statistics (Spotify)
                                 </div>
-                                <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
+                                <div class="card-body"><canvas id="myChartSpotify" width="100%" height="40"></canvas></div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <i class="fas fa-chart-area me-1"></i>
+                                    Statistics (Facebook)
+                                </div>
+                                <div class="card-body"><canvas id="myChartFacebook" width="100%" height="40"></canvas></div>
                             </div>
                         </div>
                     </div>
@@ -156,91 +165,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="~/js/scripts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            $.ajax({
-                url: '/SentEmail/GetChartData',
-                type: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    console.log(data); // Verileri konsola yazdır
-                    console.log(data.clickedMailSuccessCount);
-                    // Verileri konsola yazdır
-                    var ctx = document.getElementById('myChart').getContext('2d');
-                    var myChart = new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: ['ClickedMail', 'Login success', 'Sent Email',
-                            'Login netflix success', 'Login FacebookSuccess',
-                            ' login SpotifySuccess', 'NetflixNotSuccses', 'FacebookNotSuccess', 'SpotifyNotSuccess'],
-                            datasets: [{
-                                label: 'Email Phishing',
-                                data: [data.clickedEmailCount ,data.clickedMailSuccessCount,
-                                    data.sentEmailCount, data.netflixSuccessCount,
-                                    data.facebookSuccessCount, data.spotifySuccessCount,
-                                    data.netflixNotSuccessCount, data.facebookNotSuccessCount,data.spotifyNotSuccessCount],
-                                backgroundColor: [
-                                    'rgba(255, 99, 132, 0.2)',
-                                    'rgba(54, 162, 235, 0.2)',
-                                    'rgba(255, 206, 86, 0.2)',
-                                    'rgba(75, 192, 192, 0.2)',
-                                    'rgba(153, 102, 255, 0.2)'
-                                ],
-                                borderColor: [
-                                    'rgba(255, 99, 132, 1)',
-                                    'rgba(54, 162, 235, 1)',
-                                    'rgba(255, 206, 86, 1)',
-                                    'rgba(75, 192, 192, 1)',
-                                    'rgba(153, 102, 255, 1)'
-                                ],
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            }
-                        }
-                    });
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            });
-        });
-
-    </script>
-
-    <script>
-        $.ajax({
-            url: '/SentEmail/GetSentEmailStatistics',
-            method: 'GET',
-            success: function (data) {
-                var ctx = document.getElementById("myBarChart").getContext('2d');
-                var myLineChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: data.labels,
-                        datasets: [{
-                            label: 'SentEmails',
-                            backgroundColor: 'rgba(2,117,216,1)',
-                            borderColor: 'rgba(2,117,216,1)',
-                            data: data.data,
-                            fill: false,
-                        }]
-                    },
-                    options: {
-
-                    }
-                });
-            }
-        });
-    </script>
+    
     
 </body>
 </html>

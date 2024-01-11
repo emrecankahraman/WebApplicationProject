@@ -34,90 +34,84 @@ namespace WebApplicationProject.Controllers
         {
             return View("~/Views/SentEmail/SentEmail.cshtml");
         }
-        public IActionResult smptEmailSender()
-        {
-            try
-            {
-                SendEmailToVictims();
-                _logger.LogInformation("Tüm Victim kayıtlarına e-posta başarıyla gönderildi.");
-                return View();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("E-posta gönderilirken bir hata oluştu: " + ex.Message);
-                return StatusCode(500);
-            }
-        }
-
-        private void SendEmailToVictims()
-        {
-            string fromMail = "stmpstmp8@gmail.com";
-            string fromPassword = "dkrq ofth kgxj vzqw";
-
-            var victims = _context.Victims.ToList();
-
-            foreach (var victim in victims)
-            {
-                string toAddress = victim.Email;
-
-                var sentEmail = _context.SentEmails.FirstOrDefault();
-                string subject = sentEmail?.Title ?? "Varsayılan Konu";
-                string description = sentEmail?.Description ?? "Varsayılan Açıklama";
-
-                MailMessage message = new MailMessage();
-                message.To.Add(new MailAddress(toAddress));
-                message.Body = "<html><body>" + description + "</body></html>";
-                message.From = new MailAddress(fromMail);
-                message.Subject = subject;
-                message.IsBodyHtml = true;
-
-                var smtpClient = new System.Net.Mail.SmtpClient("smtp.gmail.com", 587);
-                smtpClient.Credentials = new NetworkCredential(fromMail, fromPassword);
-                smtpClient.EnableSsl = true;
-
-                smtpClient.Send(message);
-
-            }
-        }
-
-
-        public IActionResult SentEmail(int startId, int endId, SentEmail sentEmail)
+        public IActionResult SentEmail(int startId, int endId, SentEmail sentEmail, string attackType)
         {
             if (ModelState.IsValid)
             {
-                var victimsInRange = _context.Victims
-                    .Where(v => v.VictimId >= startId && v.VictimId <= endId)
-                    .ToList();
-                var attack = _context.Attacks.FirstOrDefault(a => a.AttackId == sentEmail.AttackId);
-
-                foreach (var victim in victimsInRange)
+                try
                 {
-                    var newSentEmail = new SentEmail
+                    // Kullanıcının girdiği Attack Type'a göre Attack'ı bulun
+                    var attack = _context.Attacks.FirstOrDefault(a => a.Type == attackType);
+
+                    if (attack == null)
                     {
-                        VictimId = victim.VictimId,
-                        //Description = $"Sn. {victim.Name} bir ödül kazandınız. {attack?.Type} den gelen hediyeyi kabul etmek için <a href='{attack?.Url}'>buraya tıklayın</a>",
-                        SentDate = sentEmail.SentDate,
-                        AttackId = sentEmail.AttackId,
-                        Title = sentEmail.Title
-                    };
+                        // Handle the case where the attack with the specified type is not found.
+                        // You might want to log an error or take appropriate action.
+                        return RedirectToAction("Index"); // veya başka bir yönlendirme
+                    }
 
-                    var Email = _context.Add(newSentEmail);
-                    _context.SaveChanges();
-                    var SavedEmail = _context.SentEmails.FirstOrDefault(a => a.EmailId == Email.Entity.EmailId);
-                    SavedEmail.Description = $"Sn. {victim.Name} bir ödül kazandınız. {attack?.Type} den gelen hediyeyi kabul etmek için" +
-                        $" <a href='{attack?.Url}?EmailId={SavedEmail.EmailId}'>buraya tıklayın</a>";//queryString
-                    _context.Update(SavedEmail);
-                    _context.SaveChanges();
-                    //return Redirect($"{attack?.Url}?EmailId={SavedEmail.EmailId}");
+                    var victimsInRange = _context.Victims
+                        .Where(v => v.VictimId >= startId && v.VictimId <= endId)
+                        .ToList();
 
+                    foreach (var victim in victimsInRange)
+                    {
+                        var newSentEmail = new SentEmail
+                        {
+                            VictimId = victim.VictimId,
+                            SentDate = sentEmail.SentDate,
+                            AttackId = attack.AttackId, // Attack'ı bulduktan sonra AttackId'yi kullanın
+                            Title = sentEmail.Title
+                        };
+
+                        _context.Add(newSentEmail);
+                        _context.SaveChanges();
+
+                        var savedEmail = _context.SentEmails.FirstOrDefault(a => a.EmailId == newSentEmail.EmailId);
+                        savedEmail.Description = $"Sn. {victim.Name} bir ödül kazandınız. {attack.Type} den gelen hediyeyi kabul etmek için" +
+                            $" <a href='{attack.Url}?EmailId={savedEmail.EmailId}'>buraya tıklayın</a>";
+                        _context.Update(savedEmail);
+                        _context.SaveChanges();
+
+                        // E-postayı gönder
+                        string fromMail = "stmpstmp8@gmail.com";
+                        string fromPassword = "dkrq ofth kgxj vzqw";
+
+                        string toAddress = victim.Email;
+
+                        string subject = savedEmail?.Title ?? "Varsayılan Konu";
+                        string clickHereLink = $"<a href='{attack.Url}?EmailId={savedEmail.EmailId}'>buraya tıklayın</a>";
+                        string description = savedEmail?.Description ?? "Varsayılan Açıklama";
+
+                        MailMessage message = new MailMessage();
+                        message.To.Add(new MailAddress(toAddress));
+                        message.Body = $"<html><body><p>{description}</p></body></html>";
+                        message.From = new MailAddress(fromMail);
+                        message.Subject = subject;
+                        message.IsBodyHtml = true;
+
+                        var smtpClient = new System.Net.Mail.SmtpClient("smtp.gmail.com", 587);
+                        smtpClient.Credentials = new NetworkCredential(fromMail, fromPassword);
+                        smtpClient.EnableSsl = true;
+
+                        smtpClient.Send(message);
+                    }
+
+                    _logger.LogInformation("Tüm Victim kayıtlarına e-posta başarıyla gönderildi.");
+                    return RedirectToAction("Index");
                 }
-                return RedirectToAction("Index");
-
-
+                catch (Exception ex)
+                {
+                    _logger.LogError("E-posta gönderilirken bir hata oluştu: " + ex.Message);
+                    return StatusCode(500);
+                }
             }
 
-            return View(sentEmail); // Gerekirse geri dönecek bir view
+            return View(sentEmail);
         }
+
+
+
         public IActionResult ProcessEmailFile()
         {
             string filePath = @"C:\Users\Tarık\Documents\Emails.txt"; // Dosya yolunu belirtin
@@ -245,7 +239,6 @@ namespace WebApplicationProject.Controllers
                 NetflixNotSuccessCount = netflixNotSuccessCount,
                 FacebookNotSuccessCount = facebookNotSuccessCount,
                 SpotifyNotSuccessCount = spotifyNotSuccessCount,
-
                 NetflixSuccessCount = netflixSuccessCount,
                 FacebookSuccessCount = facebookSuccessCount,
                 SpotifySuccessCount = spotifySuccessCount

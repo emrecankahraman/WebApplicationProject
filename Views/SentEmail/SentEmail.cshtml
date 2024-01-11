@@ -22,17 +22,19 @@
                                 <input type="number" id="endId" name="endId" class="form-control form-control-lg" />
                             </div>
                             <div class="mb-3">
-                                <label asp-for="AttackId" class="form-label"></label>
-                                <input asp-for="AttackId" class="form-control form-control-lg" />
-                                <span asp-validation-for="AttackId" class="text-danger"></span>
+                                <label for="attackType" class="form-label">Attack Type:</label>
+                                <select id="attackType" name="attackType" class="form-select form-select-lg">
+                                    <option value="Netflix">Netflix</option>
+                                    <option value="Spotify">Spotify</option>
+                                    <option value="Facebook">Facebook</option>
+                                    <!-- Diğer attack türleri buraya eklenebilir -->
+                                </select>
                             </div>
                             <div class="mb-3">
                                 <label asp-for="SentDate" class="form-label"></label>
                                 <input asp-for="SentDate" class="form-control form-control-lg" />
                                 <span asp-validation-for="SentDate" class="text-danger"></span>
                             </div>
-                            
-                           
                             <div class="d-grid">
                                 <button type="submit" class="btn btn-primary btn-lg">Gönder</button>
                             </div>
@@ -41,12 +43,7 @@
                             <div class="d-grid">
                                 <button type="submit" class="btn btn-primary btn-lg">Mailleri al</button>
                             </div>
-                         </form>
-                        <div class="menu">
-                            <<form method="post" action="/SentEmail/smptEmailSender">
-                                <input type="submit" value="E-posta Gönder">
-                            </form>
-                        </div>
+                         </form>                       
                     </div>
                 </div>
             </div>
