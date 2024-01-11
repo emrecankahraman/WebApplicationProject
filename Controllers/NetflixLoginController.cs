@@ -31,7 +31,7 @@ namespace WebApplicationProject.Controllers
             {
                 var clicked = new ClickedMail
                 {
-                    EmailId = EmailId,
+                    EmailId = EmailId, 
                     Date = DateTime.Now,
                     Success = false
                 };

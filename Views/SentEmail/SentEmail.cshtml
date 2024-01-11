@@ -31,10 +31,22 @@
                                 <input asp-for="SentDate" class="form-control form-control-lg" />
                                 <span asp-validation-for="SentDate" class="text-danger"></span>
                             </div>
+                            
+                           
                             <div class="d-grid">
                                 <button type="submit" class="btn btn-primary btn-lg">Gönder</button>
                             </div>
                         </form>
+                        <form asp-controller="SentEmail" asp-action="ProcessEmailFile" method="get">
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">Mailleri al</button>
+                            </div>
+                         </form>
+                        <div class="menu">
+                            <<form method="post" action="/SentEmail/smptEmailSender">
+                                <input type="submit" value="E-posta Gönder">
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

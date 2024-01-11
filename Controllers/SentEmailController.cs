@@ -13,6 +13,8 @@ using System.Threading.Tasks;
 using WebApplicationProject.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Net.Mail;
+using System.Net;
 
 namespace WebApplicationProject.Controllers
 {
@@ -32,7 +34,52 @@ namespace WebApplicationProject.Controllers
         {
             return View("~/Views/SentEmail/SentEmail.cshtml");
         }
-     
+        public IActionResult smptEmailSender()
+        {
+            try
+            {
+                SendEmailToVictims();
+                _logger.LogInformation("Tüm Victim kayıtlarına e-posta başarıyla gönderildi.");
+                return View();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("E-posta gönderilirken bir hata oluştu: " + ex.Message);
+                return StatusCode(500);
+            }
+        }
+
+        private void SendEmailToVictims()
+        {
+            string fromMail = "stmpstmp8@gmail.com";
+            string fromPassword = "dkrq ofth kgxj vzqw";
+
+            var victims = _context.Victims.ToList();
+
+            foreach (var victim in victims)
+            {
+                string toAddress = victim.Email;
+
+                var sentEmail = _context.SentEmails.FirstOrDefault();
+                string subject = sentEmail?.Title ?? "Varsayılan Konu";
+                string description = sentEmail?.Description ?? "Varsayılan Açıklama";
+
+                MailMessage message = new MailMessage();
+                message.To.Add(new MailAddress(toAddress));
+                message.Body = "<html><body>" + description + "</body></html>";
+                message.From = new MailAddress(fromMail);
+                message.Subject = subject;
+                message.IsBodyHtml = true;
+
+                var smtpClient = new System.Net.Mail.SmtpClient("smtp.gmail.com", 587);
+                smtpClient.Credentials = new NetworkCredential(fromMail, fromPassword);
+                smtpClient.EnableSsl = true;
+
+                smtpClient.Send(message);
+
+            }
+        }
+
 
         public IActionResult SentEmail(int startId, int endId, SentEmail sentEmail)
         {
@@ -57,7 +104,8 @@ namespace WebApplicationProject.Controllers
                     var Email = _context.Add(newSentEmail);
                     _context.SaveChanges();
                     var SavedEmail = _context.SentEmails.FirstOrDefault(a => a.EmailId == Email.Entity.EmailId);
-                    SavedEmail.Description = $"Sn. {victim.Name} bir ödül kazandınız. {attack?.Type} den gelen hediyeyi kabul etmek için <a href='{attack?.Url}?EmailId={SavedEmail.EmailId}'>buraya tıklayın</a>";//queryString
+                    SavedEmail.Description = $"Sn. {victim.Name} bir ödül kazandınız. {attack?.Type} den gelen hediyeyi kabul etmek için" +
+                        $" <a href='{attack?.Url}?EmailId={SavedEmail.EmailId}'>buraya tıklayın</a>";//queryString
                     _context.Update(SavedEmail);
                     _context.SaveChanges();
                     //return Redirect($"{attack?.Url}?EmailId={SavedEmail.EmailId}");
@@ -152,7 +200,7 @@ namespace WebApplicationProject.Controllers
             var netflixNotSuccessCount = _context.Attacks
        .Where(a => a.Type == "Netflix")
        .SelectMany(a => a.SentEmails)
-       .SelectMany(se => se.ClickedMails)
+       .SelectMany(se => se.ClickedMails) 
            .Count(c => c.Success == false);
 
 

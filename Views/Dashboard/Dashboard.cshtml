@@ -126,7 +126,7 @@
                             <div class="card mb-4">
                                 <div class="card-header">
                                     <i class="fas fa-chart-bar me-1"></i>
-                                    Total Logins
+                                    Sent Mails
                                 </div>
                                 <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
                             </div>
@@ -172,10 +172,15 @@
                     var myChart = new Chart(ctx, {
                         type: 'bar',
                         data: {
-                            labels: ['ClickedMail', 'Login success', 'Sent Email', 'Login netflix success', 'Login FacebookSuccess', ' login SpotifySuccess', 'NetflixNotSuccses', 'FacebookNotSuccess', 'SpotifyNotSuccess'],
+                            labels: ['ClickedMail', 'Login success', 'Sent Email',
+                            'Login netflix success', 'Login FacebookSuccess',
+                            ' login SpotifySuccess', 'NetflixNotSuccses', 'FacebookNotSuccess', 'SpotifyNotSuccess'],
                             datasets: [{
                                 label: 'Email Phishing',
-                                data: [data.clickedEmailCount ,data.clickedMailSuccessCount, data.sentEmailCount, data.netflixSuccessCount, data.facebookSuccessCount, data.spotifySuccessCount, data.netflixNotSuccessCount, data.facebookNotSuccessCount,data.spotifyNotSuccessCount],
+                                data: [data.clickedEmailCount ,data.clickedMailSuccessCount,
+                                    data.sentEmailCount, data.netflixSuccessCount,
+                                    data.facebookSuccessCount, data.spotifySuccessCount,
+                                    data.netflixNotSuccessCount, data.facebookNotSuccessCount,data.spotifyNotSuccessCount],
                                 backgroundColor: [
                                     'rgba(255, 99, 132, 0.2)',
                                     'rgba(54, 162, 235, 0.2)',
@@ -207,7 +212,6 @@
                 }
             });
         });
-
 
     </script>
 
